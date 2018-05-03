@@ -47,7 +47,7 @@ int LED      = LED_BUILTIN;
 ////////////////////////////////////////
  
 // Include the CCDebugger
-#include <CCDebugger.h>
+#include "CCDebugger.h"
 
 // Command constants
 #define   CMD_ENTER     byte(0x01)
@@ -91,7 +91,8 @@ void setup() {
   dbg->setLED( LED, LED );
   
   // Initialize serial port
-  Serial.begin(115200);
+  //Serial.begin(115200);
+  Serial.begin(9600);
   
   // Wait for chip to initialize
   delay(100);

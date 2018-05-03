@@ -82,8 +82,9 @@ class CCLibProxy:
 			else:
 				# Open port
 				try:
-					self.ser = serial.Serial(port)
+					self.ser = serial.Serial(port, baudrate=9600, timeout=3.0, write_timeout=3.0)
 					self.port = port
+					time.sleep(3)
 				except:
 					raise IOError("Could not open port %s" % port)
 
