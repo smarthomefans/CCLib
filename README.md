@@ -1,3 +1,74 @@
+This fork from CCLib is meant to simplify the flashing of CC2530 devices with a Wemos D1 Mini or any equivalent based on ESP8266, to be used with [Tasmota](https://github.com/arendst/Sonoff-Tasmota).
+
+It is based on this [fork](https://github.com/kirovilya/CCLib) from `kirovilya` and instructions described in this [blog post](https://www.zigbee2mqtt.io/information/alternative_flashing_methods.html).
+
+The port speed is reduced to 19200 to avoid communication errors :`ERROR: Could not read from the serial port!`
+
+Default pinout is the following:
+
+- `GPIO4` connected to `CC_DC` aka `P2_2` or `Debug Clock`
+- `GPIO5` connected to `CC_RST`
+- `GPIO12`connected to `CC_DD_I` aka `P2_1` or `Debug Data`
+- `GPIO14`connected to `CC_DD_I` aka `P2_1` or `Debug Data`
+
+Note: GPIO12 and GPIO14 are indeed connected together, this is normal!
+
+Tasmota Zigbee currenlty only supports **ZNP 1.2 default mode** for coordinator. CCLib requires to remove the second last line.
+
+For convenience, ready to use firmwares are provided, just unzip them and select the right one: `CC2530`, `CC2530 + CC2591` or `CC2530 + CC2592`.
+
+Make sure you have Python 2.7 installed and install pyserial 3.0.1: `pip install pyserial==3.0.1`
+
+Before flashing, check the connectivity:
+
+```python cc_info.py -p <serial_port>```
+
+Example or result:
+
+```
+INFO: Found a CC2530 chip on /dev/cu.usbserial-xxxx
+
+Chip information:
+      Chip ID : 0xa524
+   Flash size : 16 Kb
+    Page size : 2 Kb
+    SRAM size : 1 Kb
+          USB : No
+
+Device information:
+ IEEE Address : 000000000000
+           PC : 0000
+
+Debug status:
+ [ ] CHIP_ERASE_BUSY
+ [ ] PCON_IDLE
+ [X] CPU_HALTED
+ [ ] PM_ACTIVE
+ [ ] HALT_STATUS
+ [X] DEBUG_LOCKED
+ [X] OSCILLATOR_STABLE
+ [ ] STACK_OVERFLOW
+
+Debug config:
+ [ ] SOFT_POWER_MODE
+ [ ] TIMERS_OFF
+ [ ] DMA_PAUSE
+ [ ] TIMER_SUSPEND
+```
+
+To flash the firmware, use the following command: (flashing takes 1-2 hours)
+
+```python cc_write_flash.py -e -p <serial_port> --in=Bin/CC2530_DEFAULT_20190608_CC2530ZNP-Prod.hex```
+
+
+Once flashed, the recommended connection to Wemos D1 mini is:
+
+- `GPIO13` (Zigbee RX) connected to `CC_TXD` aka `P0_3`
+- `GPIO15` (Zigbee TX) connected to `CC_RXD` aka `P0_2`
+
+<BR>
+
+---------
 
 # CCLib
 

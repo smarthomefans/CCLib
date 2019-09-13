@@ -35,10 +35,14 @@
 ////////////////////////////////////////
 
 // Pinout configuration (Configured for Arduino Leonardo)
+//int CC_RST   = 5;
+//int CC_DC    = 4;
+//int CC_DD_I  = 3;
+//int CC_DD_O  = 2;
 int CC_RST   = 5;
 int CC_DC    = 4;
-int CC_DD_I  = 3;
-int CC_DD_O  = 2;
+int CC_DD_I  = 14;
+int CC_DD_O  = 12;
 
 // Change this if you are using an external led
 int LED      = LED_BUILTIN;
@@ -92,7 +96,8 @@ void setup() {
   
   // Initialize serial port
   //Serial.begin(115200);
-  Serial.begin(9600);
+  Serial.begin(19200);
+  //Serial.begin(9600);
   
   // Wait for chip to initialize
   delay(100);
