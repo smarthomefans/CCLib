@@ -21,7 +21,7 @@ Make sure you have Python 2.7 installed and install pyserial 3.0.1: `pip install
 
 Before flashing, check the connectivity:
 
-```python cc_info.py -p <serial_port>```
+```python Python/cc_info.py -p <serial_port>```
 
 Example or result:
 
@@ -56,10 +56,46 @@ Debug config:
  [ ] TIMER_SUSPEND
 ```
 
-To flash the firmware, use the following command: (flashing takes 1-2 hours)
+To flash the firmware, use the following command: (flashing takes \~1 hours)
 
-```python cc_write_flash.py -e -p <serial_port> --in=Bin/CC2530_DEFAULT_20190608_CC2530ZNP-Prod.hex```
+```python Python/cc_write_flash.py -e -p /dev/cu.usbserial-1420 -i Bin/CC2530_DEFAULT_20190608_CC2530ZNP-Prod.hex```
 
+```
+INFO: Found a CC2530 chip on /dev/cu.usbserial-1420
+
+Chip information:
+      Chip ID : 0xa524
+   Flash size : 256 Kb
+    Page size : 2 Kb
+    SRAM size : 8 Kb
+          USB : No
+Sections in Bin/CC2530_DEFAULT_20190608_CC2530ZNP-Prod.hex:
+
+ Addr.    Size
+-------- -------------
+ 0x0000   8176 B 
+ 0x1ff6   10 B 
+ 0x3fff0   1 B 
+ 0x2000   239616 B 
+
+This is going to ERASE and REPROGRAM the chip. Are you sure? <y/N>:  y
+
+Flashing:
+ - Chip erase...
+ - Flashing 4 memory blocks...
+ -> 0x0000 : 8176 bytes 
+    Progress 100%... OK
+ -> 0x1ff6 : 10 bytes 
+    Progress 100%... OK
+ -> 0x3fff0 : 1 bytes 
+    Progress 100%... OK
+ -> 0x2000 : 239616 bytes 
+    Progress 100%... OK
+
+Completed
+```
+
+<BR>
 
 Once flashed, the recommended connection to Wemos D1 mini is:
 

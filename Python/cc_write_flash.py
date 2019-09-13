@@ -64,9 +64,9 @@ for mb in hexFile.memBlocks:
 print("")
 
 # Check for oversize data
-if maxMem > (dbg.chipInfo['flash'] * 1024):
-	print("ERROR: Data too bit to fit in chip's memory!")
-	sys.exit(4)
+#if maxMem > (dbg.chipInfo['flash'] * 1024):
+#	print("ERROR: Data too bit to fit in chip's memory!")
+#	sys.exit(4)
 
 # Confirm
 erasePrompt = "OVERWRITE"
