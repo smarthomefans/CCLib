@@ -22,8 +22,6 @@
 
 *.pyc
 
-*.bin
-
 Python/test.py
 
 *.hex
