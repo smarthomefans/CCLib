@@ -17,8 +17,7 @@
 // Pinout configuration (Configured for Tasmota Zigbee)
 int CC_RST   = 5;
 int CC_DC    = 4;
-int CC_DD_I  = 14;
-int CC_DD_O  = 12;
+int CC_DD    = 12;
 
 ////////////////////////////////////////
 ////////////////////////////////////////
@@ -64,7 +63,7 @@ int iLen, iRead;
 void setup() {
 
   // Create debugger
-  dbg = new CCDebugger( CC_RST, CC_DC, CC_DD_I, CC_DD_O );
+  dbg = new CCDebugger( CC_RST, CC_DC, CC_DD );
 
   // Initialize serial port
   //Serial.begin(115200);

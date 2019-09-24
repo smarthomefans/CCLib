@@ -39,7 +39,7 @@ public:
   /**
    * Initialize CC Debugger class
    */
-  CCDebugger( int pinRST, int pinDC, int pinDD_I, int pinDD_O );
+  CCDebugger( int pinRST, int pinDC, int pinDD);
 
   /**
    * Activate/deactivate debugger
@@ -175,8 +175,7 @@ private:
    */
   int       pinRST;
   int       pinDC;
-  int       pinDD_I;
-  int       pinDD_O;
+  int       pinDD;
   byte      errorFlag;
   byte      ddIsOutput;
   byte      inDebugMode;

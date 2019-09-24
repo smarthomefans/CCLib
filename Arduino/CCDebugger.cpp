@@ -46,23 +46,20 @@
 /**
  * Initialize CC Debugger class
  */
-CCDebugger::CCDebugger( int pinRST, int pinDC, int pinDD_I, int pinDD_O )
+CCDebugger::CCDebugger( int pinRST, int pinDC, int pinDD)
 {
 
   // Keep references
   this->pinRST  = pinRST;
   this->pinDC   = pinDC;
-  this->pinDD_I = pinDD_I;
-  this->pinDD_O = pinDD_O;
+  this->pinDD   = pinDD;
 
   // Prepare CC Pins
   pinMode(pinDC,        OUTPUT);
-  pinMode(pinDD_I,      INPUT);
-  pinMode(pinDD_O,      OUTPUT);
+  pinMode(pinDD,        INPUT);
   pinMode(pinRST,       OUTPUT);
   digitalWrite(pinDC,   LOW);
-  digitalWrite(pinDD_I, LOW); // No pull-up
-  digitalWrite(pinDD_O, LOW);
+  digitalWrite(pinDD,   LOW); // No pull-up
   digitalWrite(pinRST,  LOW);
 
   // Prepare default direction
@@ -106,12 +103,10 @@ void CCDebugger::setActive( boolean on )
 
     // Prepare CC Pins
     pinMode(pinDC,        OUTPUT);
-    pinMode(pinDD_I,      INPUT);
-    pinMode(pinDD_O,      OUTPUT);
+    pinMode(pinDD,        INPUT);
     pinMode(pinRST,       OUTPUT);
     digitalWrite(pinDC,   LOW);
-    digitalWrite(pinDD_I, LOW); // No pull-up
-    digitalWrite(pinDD_O, LOW);
+    digitalWrite(pinDD,   LOW); // No pull-up
     digitalWrite(pinRST,  LOW);
 
     // Default direction is INPUT
@@ -125,12 +120,10 @@ void CCDebugger::setActive( boolean on )
 
     // Put everything in inactive mode
     pinMode(pinDC,        INPUT);
-    pinMode(pinDD_I,      INPUT);
-    pinMode(pinDD_O,      INPUT);
+    pinMode(pinDD,        INPUT);
     pinMode(pinRST,       INPUT);
     digitalWrite(pinDC,   LOW);
-    digitalWrite(pinDD_I, LOW);
-    digitalWrite(pinDD_O, LOW);
+    digitalWrite(pinDD,   LOW);
     digitalWrite(pinRST,  LOW);
 
   }
@@ -222,9 +215,9 @@ byte CCDebugger::write( byte data )
 
     // First put data bit on bus
     if (data & 0x80)
-      digitalWrite(pinDD_O, HIGH);
+      digitalWrite(pinDD, HIGH);
     else
-      digitalWrite(pinDD_O, LOW);
+      digitalWrite(pinDD, LOW);
 
     // Place clock on high (other end reads data)
     digitalWrite(pinDC, HIGH);
@@ -268,7 +261,7 @@ byte CCDebugger::switchRead(byte maxWaitCycles)
   cc_delay(2);
 
   // Wait for DD to go LOW (Chip is READY)
-  while (digitalRead(pinDD_I) == HIGH) {
+  while (digitalRead(pinDD) == HIGH) {
 
     // Do 8 clock cycles
     for (cnt = 8; cnt; cnt--) {
@@ -333,7 +326,7 @@ byte CCDebugger::read()
 
     // Shift and read
     data <<= 1;
-    if (digitalRead(pinDD_I) == HIGH)
+    if (digitalRead(pinDD) == HIGH)
       data |= 0x01;
 
     digitalWrite(pinDC, LOW);
@@ -357,13 +350,11 @@ void CCDebugger::setDDDirection( byte direction )
 
   // Handle new direction
   if (ddIsOutput) {
-    digitalWrite(pinDD_I, LOW); // Disable pull-up
-    pinMode(pinDD_O, OUTPUT);   // Enable output
-    digitalWrite(pinDD_O, LOW); // Switch to low
+    pinMode(pinDD, OUTPUT);   // Enable output
+    digitalWrite(pinDD, LOW); // Switch to low
   } else {
-    digitalWrite(pinDD_I, LOW); // Disable pull-up
-    pinMode(pinDD_O, INPUT);    // Disable output
-    digitalWrite(pinDD_O, LOW); // Don't use output pull-up
+    pinMode(pinDD, INPUT);    // Disable output
+    digitalWrite(pinDD, LOW); // Don't use output pull-up
   }
 
 }
