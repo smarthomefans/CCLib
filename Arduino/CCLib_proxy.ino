@@ -1,29 +1,9 @@
 /*
- /////////////////////////////////////////////////////////////////////////////// 
+ ///////////////////////////////////////////////////////////////////////////////
  This example demonstrates the use of the CCDebugger class from CCLib.
- 
- This is the firmware you must flash in your Arduino/Teensy if you want to use
+
+ This is the firmware you must flash in your Wemos D1 Mini if you want to use
  the python library that comes with this project.
- 
- It provides a low-level passthrough proxy for driving the entire CC.Debugger 
- process from the computer.
- 
- This version works with 2-wire DD configuration which is used for providing
- the required voltage division from 5V to 3.3V:
- 
- For the DD Pin:
- 
- <CC_DD_O> --[ 100k ]-- <CC_DD_I> --[ 200k ]-- <GND>
-                            |
-                           {DD}
- 
- For the DC Pin:
- 
- <CC_DC> --[ 100k ]-- {DC} --[ 200k ]-- <GND>
- 
- For the RST Pin:
- 
- <CC_DC> --[ 100k ]-- {RST} --[ 200k ]-- <GND>
 
  ///////////////////////////////////////////////////////////////////////////////
  (C) Copyright 2014, Ioannis Charalampidis - Licensed under GNU/GPLv3 License.
@@ -34,22 +14,15 @@
 ////////////////////////////////////////
 ////////////////////////////////////////
 
-// Pinout configuration (Configured for Arduino Leonardo)
-//int CC_RST   = 5;
-//int CC_DC    = 4;
-//int CC_DD_I  = 3;
-//int CC_DD_O  = 2;
+// Pinout configuration (Configured for Tasmota Zigbee)
 int CC_RST   = 5;
 int CC_DC    = 4;
 int CC_DD_I  = 14;
 int CC_DD_O  = 12;
 
-// Change this if you are using an external led
-int LED      = LED_BUILTIN;
+////////////////////////////////////////
+////////////////////////////////////////
 
-////////////////////////////////////////
-////////////////////////////////////////
- 
 // Include the CCDebugger
 #include "CCDebugger.h"
 
@@ -89,19 +62,18 @@ int iLen, iRead;
  * Initialize debugger
  */
 void setup() {
-  
+
   // Create debugger
   dbg = new CCDebugger( CC_RST, CC_DC, CC_DD_I, CC_DD_O );
-  dbg->setLED( LED, LED );
-  
+
   // Initialize serial port
   //Serial.begin(115200);
   Serial.begin(19200);
   //Serial.begin(9600);
-  
+
   // Wait for chip to initialize
   delay(100);
-  
+
   // Enter debug mode
   dbg->enter();
 
@@ -133,21 +105,21 @@ boolean handleError( ) {
  * Main program loop
  */
 void loop() {
-  
+
   // Wait for incoming data frame
   if (Serial.available() < 4)
     return;
-  
+
   // Read input frame
   inByte = Serial.read();
       c1 = Serial.read();
       c2 = Serial.read();
-      c3 = Serial.read();  
-  
+      c3 = Serial.read();
+
   // Handle commands
   if (inByte == CMD_PING) {
     sendFrame( ANS_OK );
-    
+
   } else if (inByte == CMD_ENTER) {
     bAns = dbg->enter();
     if (handleError()) return;
@@ -157,7 +129,7 @@ void loop() {
     bAns = dbg->exit();
     if (handleError()) return;
     sendFrame( ANS_OK );
-    
+
   } else if (inByte == CMD_CHIP_ID) {
     s1 = dbg->getChipID();
     if (handleError()) return;
@@ -165,7 +137,7 @@ void loop() {
                s1 & 0xFF,       // LOW first
                (s1 >> 8) & 0xFF // HIGH second
               );
-    
+
   } else if (inByte == CMD_PC) {
     s1 = dbg->getPC();
     if (handleError()) return;
@@ -173,7 +145,7 @@ void loop() {
                s1 & 0xFF,       // LOW first
                (s1 >> 8) & 0xFF // HIGH second
               );
-    
+
   } else if (inByte == CMD_STATUS) {
     bAns = dbg->getStatus();
     if (handleError()) return;
@@ -185,40 +157,40 @@ void loop() {
     sendFrame( ANS_OK, bAns );
 
   } else if (inByte == CMD_EXEC_1) {
-    
+
     bAns = dbg->exec( c1 );
     if (handleError()) return;
     sendFrame( ANS_OK, bAns );
 
   } else if (inByte == CMD_EXEC_2) {
-    
+
     bAns = dbg->exec( c1, c2 );
     if (handleError()) return;
     sendFrame( ANS_OK, bAns );
 
-  } else if (inByte == CMD_EXEC_3) {    
+  } else if (inByte == CMD_EXEC_3) {
     bAns = dbg->exec( c1, c2, c3 );
     if (handleError()) return;
     sendFrame( ANS_OK, bAns );
-  
+
   } else if (inByte == CMD_BRUSTWR) {
-    
+
     // Calculate the size of the incoming brust
     iLen = (c1 << 8) | c2;
-    
+
     // Validate length
     if (iLen > 2048) {
       sendFrame( ANS_ERROR, 3 );
       return;
     }
-    
+
     // Confirm transfer
     sendFrame( ANS_READY );
-    
+
     // Prepare for brust-write
     dbg->write( 0x80 | (c1 & 0x07) ); // High-order bits
     dbg->write( c2 ); // Low-order bits
-    
+
     // Start serial loop
     iRead = iLen;
     bIdle = 0;
@@ -237,7 +209,7 @@ void loop() {
 
         // If we are idle for more than 1s, drop command
         if (++bIdle > 200) {
-          
+
           // The PC was disconnected/stale for too long
           // complete the command by sending 0's
           while (iRead > 0) {
@@ -256,26 +228,26 @@ void loop() {
 
         }
 
-        // Wait for some time 
+        // Wait for some time
         delay(50);
 
       }
     }
-    
+
     // Read debug status
     dbg->switchRead();
     bAns = dbg->read();
     dbg->switchWrite();
 
-    // Handle response    
+    // Handle response
     if (handleError()) return;
     sendFrame( ANS_OK, bAns );
-    
+
   } else if (inByte == CMD_RD_CFG) {
     bAns = dbg->getConfig();
     if (handleError()) return;
     sendFrame( ANS_OK, bAns );
-    
+
   } else if (inByte == CMD_WR_CFG) {
     bAns = dbg->setConfig(c1);
     if (handleError()) return;
@@ -290,7 +262,7 @@ void loop() {
     bAns = dbg->step();
     if (handleError()) return;
     sendFrame( ANS_OK, bAns );
- 
+
   } else if (inByte == CMD_RESUME) {
     bAns = dbg->resume();
     if (handleError()) return;
@@ -322,7 +294,7 @@ void loop() {
 
   } else {
     sendFrame( ANS_ERROR, 0xFF );
-    
+
   }
-  
+
 }

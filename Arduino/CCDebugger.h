@@ -42,11 +42,6 @@ public:
   CCDebugger( int pinRST, int pinDC, int pinDD_I, int pinDD_O );
 
   /**
-   * Set/Enable leds
-   */
-  void setLED( int pinReadLED, int pinWriteLED );
-
-  /**
    * Activate/deactivate debugger
    */
   void setActive( boolean on );
@@ -182,8 +177,6 @@ private:
   int       pinDC;
   int       pinDD_I;
   int       pinDD_O;
-  int       pinReadLED;
-  int       pinWriteLED;
   byte      errorFlag;
   byte      ddIsOutput;
   byte      inDebugMode;
@@ -192,4 +185,3 @@ private:
 };
 
 #endif
-

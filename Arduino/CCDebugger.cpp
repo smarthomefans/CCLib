@@ -55,10 +55,6 @@ CCDebugger::CCDebugger( int pinRST, int pinDC, int pinDD_I, int pinDD_O )
   this->pinDD_I = pinDD_I;
   this->pinDD_O = pinDD_O;
 
-  // Reset LEDS
-  this->pinReadLED = 0;
-  this->pinWriteLED = 0;
-
   // Prepare CC Pins
   pinMode(pinDC,        OUTPUT);
   pinMode(pinDD_I,      INPUT);
@@ -92,25 +88,6 @@ CCDebugger::CCDebugger( int pinRST, int pinDC, int pinDD_I, int pinDD_O )
 
 };
 
-/**
- * Enable/Configure LEDs
- */
-void CCDebugger::setLED( int pinReadLED, int pinWriteLED )
-{
-  // Prepare read LED
-  this->pinReadLED  = pinReadLED;
-  if (pinReadLED) {
-    pinMode(pinWriteLED, OUTPUT);
-    digitalWrite(pinWriteLED, LOW);
-  }
-
-  // Prepare write LED
-  this->pinWriteLED  = pinWriteLED;
-  if (pinWriteLED) {
-    pinMode(pinWriteLED, OUTPUT);
-    digitalWrite(pinWriteLED, LOW);
-  }
-}
 
 /**
  * Activate/Deactivate debugger
@@ -137,16 +114,6 @@ void CCDebugger::setActive( boolean on )
     digitalWrite(pinDD_O, LOW);
     digitalWrite(pinRST,  LOW);
 
-    // Activate leds
-    if (pinReadLED) {
-      pinMode(pinReadLED,       OUTPUT);
-      digitalWrite(pinReadLED,  LOW);
-    }
-    if (pinWriteLED) {
-      pinMode(pinWriteLED,      OUTPUT);
-      digitalWrite(pinWriteLED, LOW);
-    }
-
     // Default direction is INPUT
     setDDDirection(INPUT);
 
@@ -165,16 +132,6 @@ void CCDebugger::setActive( boolean on )
     digitalWrite(pinDD_I, LOW);
     digitalWrite(pinDD_O, LOW);
     digitalWrite(pinRST,  LOW);
-
-    // Deactivate leds
-    if (pinReadLED) {
-      pinMode(pinReadLED,       INPUT);
-      digitalWrite(pinReadLED,  LOW);
-    }
-    if (pinWriteLED) {
-      pinMode(pinWriteLED,      INPUT);
-      digitalWrite(pinWriteLED, LOW);
-    }
 
   }
 }
@@ -211,7 +168,6 @@ byte CCDebugger::enter()
     errorFlag = CC_ERROR_NOT_ACTIVE;
     return 0;
   }
-  if (pinWriteLED) digitalWrite(pinWriteLED, HIGH);
   // =============
 
   // Reset error flag
@@ -235,7 +191,6 @@ byte CCDebugger::enter()
   inDebugMode = 1;
 
   // =============
-  if (pinWriteLED) digitalWrite(pinWriteLED, LOW);
 
   // Success
   return 0;
@@ -255,7 +210,6 @@ byte CCDebugger::write( byte data )
     errorFlag = CC_ERROR_NOT_DEBUGGING;
     return 0;
   }
-  if (pinWriteLED) digitalWrite(pinWriteLED, HIGH);
   // =============
 
   byte cnt;
@@ -286,7 +240,6 @@ byte CCDebugger::write( byte data )
   }
 
   // =============
-  if (pinWriteLED) digitalWrite(pinWriteLED, LOW);
   return 0;
 }
 
@@ -303,7 +256,6 @@ byte CCDebugger::switchRead(byte maxWaitCycles)
     errorFlag = CC_ERROR_NOT_DEBUGGING;
     return 0;
   }
-  if (pinReadLED) digitalWrite(pinReadLED, HIGH);
   // =============
 
   byte cnt;
@@ -337,8 +289,6 @@ byte CCDebugger::switchRead(byte maxWaitCycles)
       errorFlag = CC_ERROR_NOT_WIRED;
       inDebugMode = 0;
 
-      if (pinReadLED) digitalWrite(pinReadLED, LOW);
-
       return 0;
     }
   }
@@ -347,7 +297,6 @@ byte CCDebugger::switchRead(byte maxWaitCycles)
   if (didWait) cc_delay(2);
 
   // =============
-  if (pinReadLED) digitalWrite(pinReadLED, LOW);
   return 0;
 }
 
@@ -369,7 +318,6 @@ byte CCDebugger::read()
     errorFlag = CC_ERROR_NOT_ACTIVE;
     return 0;
   }
-  if (pinReadLED) digitalWrite(pinReadLED, HIGH);
   // =============
 
   byte cnt;
@@ -393,7 +341,6 @@ byte CCDebugger::read()
   }
 
   // =============
-  if (pinReadLED) digitalWrite(pinReadLED, LOW);
 
   return data;
 }
@@ -443,6 +390,7 @@ byte CCDebugger::exit()
   }
 
   byte bAns;
+  (void)bAns;   // avoid warning about variable not being used
 
   write( instr[I_RESUME] ); // RESUME
   switchRead();
