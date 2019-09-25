@@ -66,9 +66,7 @@ void setup() {
   dbg = new CCDebugger( CC_RST, CC_DC, CC_DD );
 
   // Initialize serial port
-  //Serial.begin(115200);
-  Serial.begin(19200);
-  //Serial.begin(9600);
+  Serial.begin(115200);
 
   // Wait for chip to initialize
   delay(100);
@@ -206,8 +204,8 @@ void loop() {
       // If we don't have any data, check for idle timeout
       else {
 
-        // If we are idle for more than 1s, drop command
-        if (++bIdle > 200) {
+        // If we are idle for more than 3s, drop command
+        if (++bIdle > 3000) {
 
           // The PC was disconnected/stale for too long
           // complete the command by sending 0's
@@ -228,7 +226,7 @@ void loop() {
         }
 
         // Wait for some time
-        delay(50);
+        delay(1);
 
       }
     }

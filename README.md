@@ -8,10 +8,7 @@ Default pinout is the following:
 
 - `GPIO4` connected to `CC_DC` aka `P2_2` or `Debug Clock`
 - `GPIO5` connected to `CC_RST`
-- `GPIO12`connected to `CC_DD_I` aka `P2_1` or `Debug Data`
-- `GPIO14`connected to `CC_DD_I` aka `P2_1` or `Debug Data`
-
-Note: GPIO12 and GPIO14 are indeed connected together, this is normal!
+- `GPIO12`connected to `CC_DD` aka `P2_1` or `Debug Data`
 
 Tasmota Zigbee currenlty only supports **ZNP 1.2 default mode** for coordinator. CCLib requires to remove the second last line.
 
@@ -73,23 +70,23 @@ Sections in Bin/CC2530_DEFAULT_20190608_CC2530ZNP-Prod.hex:
 
  Addr.    Size
 -------- -------------
- 0x0000   8176 B 
- 0x1ff6   10 B 
- 0x3fff0   1 B 
- 0x2000   239616 B 
+ 0x0000   8176 B
+ 0x1ff6   10 B
+ 0x3fff0   1 B
+ 0x2000   239616 B
 
 This is going to ERASE and REPROGRAM the chip. Are you sure? <y/N>:  y
 
 Flashing:
  - Chip erase...
  - Flashing 4 memory blocks...
- -> 0x0000 : 8176 bytes 
+ -> 0x0000 : 8176 bytes
     Progress 100%... OK
- -> 0x1ff6 : 10 bytes 
+ -> 0x1ff6 : 10 bytes
     Progress 100%... OK
- -> 0x3fff0 : 1 bytes 
+ -> 0x3fff0 : 1 bytes
     Progress 100%... OK
- -> 0x2000 : 239616 bytes 
+ -> 0x2000 : 239616 bytes
     Progress 100%... OK
 
 Completed
@@ -364,4 +361,3 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
