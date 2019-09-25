@@ -345,6 +345,8 @@ class CCHEXFile:
 					baseAddress = ((bytes[0] << 8) | bytes[1]) << 4
 				elif bType == 0x04:
 					baseAddress = ((bytes[0] << 8) | bytes[1]) << 16
+				elif bType == 0x05:
+					pass		# ignore
 
 				# Check for data
 				elif bType == 0x00:
