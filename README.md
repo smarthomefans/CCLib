@@ -58,7 +58,7 @@ To flash the firmware, use the following command: (flashing takes \~1 hours)
 ```python Python/cc_write_flash.py -e -p /dev/cu.usbserial-1420 -i Bin/CC2530_DEFAULT_20190608_CC2530ZNP-Prod.hex```
 
 ```
-INFO: Found a CC2530 chip on /dev/cu.usbserial-1420
+INFO: Found a CC2530 chip on /dev/cu.usbserial-xxxx
 
 Chip information:
       Chip ID : 0xa524
