@@ -15,9 +15,11 @@
 ////////////////////////////////////////
 
 // Pinout configuration (Configured for Tasmota Zigbee)
-int CC_RST   = 5;
-int CC_DC    = 4;
-int CC_DD    = 12;
+int CC_RST   = 12;
+int CC_DC    = 13;
+int CC_DD    = 14;
+int SEL_0    = 16;
+int SEL_1    = 5;
 
 ////////////////////////////////////////
 ////////////////////////////////////////
@@ -61,6 +63,12 @@ int iLen, iRead;
  * Initialize debugger
  */
 void setup() {
+
+  // Set USB tty to ESP
+  pinMode(SEL_0, OUTPUT);
+  pinMode(SEL_0, OUTPUT);
+  digitalWrite(SEL_0, HIGH);
+  digitalWrite(SEL_1, LOW);
 
   // Create debugger
   dbg = new CCDebugger( CC_RST, CC_DC, CC_DD );
